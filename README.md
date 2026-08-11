@@ -4,6 +4,11 @@ A Google Apps Script tool that generates JSON configurations for surveys from Ex
 
 The generator parses the survey structure, identifies question types, builds navigation logic, calculates progress weights, applies Russian typography rules, validates the resulting survey flow, and produces a ready-to-use JSON configuration.
 
+
+## Preview
+
+![Survey Config Generator interface](assets/survey-config-generator.png)
+
 ## Features
 
 The generator automatically:
