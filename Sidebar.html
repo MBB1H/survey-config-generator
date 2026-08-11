@@ -1,0 +1,2420 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+
+    <style>
+  :root {
+    --text-primary: #202124;
+    --text-secondary: #5f6368;
+    --border: #dadce0;
+    --background: #ffffff;
+    --background-soft: #f8f9fa;
+
+    --blue: #1a73e8;
+    --blue-hover: #1765cc;
+    --blue-soft: #f3f7ff;
+
+    --green: #188038;
+    --green-soft: #e6f4ea;
+
+    --yellow: #b06000;
+    --yellow-soft: #fef7e0;
+
+    --red: #d93025;
+    --red-soft: #fce8e6;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text-primary);
+    font-family: Arial, sans-serif;
+  }
+
+  button,
+  input,
+  textarea {
+    font-family: inherit;
+  }
+
+  .sidebar {
+    padding: 20px;
+  }
+
+  .sidebar-header {
+    margin-bottom: 14px;
+  }
+
+  .description {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 21px;
+  }
+
+  /* Настройки */
+
+  .settings-section {
+    margin-bottom: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--background);
+  }
+
+  .settings-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .settings-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .settings-summary:hover {
+    background: var(--background-soft);
+  }
+
+  .settings-summary-content {
+    min-width: 0;
+  }
+
+  .settings-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+
+  .settings-chevron {
+    flex: 0 0 auto;
+    color: var(--text-secondary);
+    font-size: 24px;
+    line-height: 24px;
+    transition: transform 0.15s ease;
+  }
+
+  .settings-section[open]
+    .settings-summary {
+    background: var(--blue-soft);
+  }
+
+  .settings-section[open]
+    .settings-chevron {
+    transform: rotate(90deg);
+  }
+
+  .settings-content {
+    padding: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Разделы настроек */
+
+  .slug-settings {
+    margin: 0 0 24px;
+  }
+
+  .result-settings {
+    margin: 0;
+  }
+
+  .slug-settings >
+    .subsection-title,
+  .result-settings >
+    .subsection-title {
+    margin: 0 0 16px;
+    color: var(--text-primary);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 21px;
+  }
+
+  .slug-field {
+    margin-bottom: 0;
+  }
+
+  .result-settings
+    .field:last-of-type {
+    margin-bottom: 12px;
+  }
+
+  .articles-block {
+    margin-top: 0;
+  }
+
+  .subsection-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .subsection-header
+    .subsection-title {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+
+  /* Поля */
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field:last-child {
+    margin-bottom: 0;
+  }
+
+  .field label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+
+  .required-marker {
+    color: var(--red);
+  }
+
+  .field input,
+  .field textarea {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--background);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 20px;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .field textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: #80868b;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    border-color: var(--blue);
+    outline: none;
+    box-shadow:
+      0 0 0 1px var(--blue);
+  }
+
+  .field-error {
+    display: none;
+    margin-top: 5px;
+    color: var(--red);
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  /* Кнопки */
+
+  .primary-button {
+    width: 100%;
+    min-height: 40px;
+    padding: 9px 14px;
+    border: 0;
+    border-radius: 7px;
+    background: var(--blue);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      opacity 0.15s ease;
+  }
+
+  .primary-button:hover:not(:disabled) {
+    background: var(--blue-hover);
+  }
+
+  .primary-button:disabled {
+    cursor: default;
+    opacity: 0.65;
+  }
+
+  .primary-button.success {
+    background: var(--green);
+  }
+
+  .primary-button.success:hover:not(:disabled) {
+    background: var(--green);
+  }
+
+  /* Статьи */
+
+  .articles-counter {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .counter-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--background);
+    color: var(--text-primary);
+    font-size: 17px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .counter-button:hover:not(:disabled) {
+    background: var(--background-soft);
+  }
+
+  .counter-button:disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+
+  .counter-value {
+    min-width: 22px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 18px;
+    text-align: center;
+  }
+
+  .result-article {
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background-soft);
+  }
+
+  .result-article-title {
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+
+  .result-article .field {
+    margin-bottom: 10px;
+  }
+
+  .result-article-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .remove-article-button {
+    width: auto;
+    min-height: auto;
+    padding: 4px 6px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--red);
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .remove-article-button:hover {
+    background: var(--red-soft);
+  }
+
+  /* Файл */
+
+  .file-section {
+    margin-top: 4px;
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  .file-card {
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background-soft);
+  }
+
+  .file-card-icon {
+    display: flex;
+    flex: 0 0 24px;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .file-card-content {
+    min-width: 0;
+  }
+
+  .file-status {
+    margin-bottom: 3px;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 17px;
+  }
+
+  .file-name {
+    overflow-wrap: anywhere;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+
+  .file-size {
+    margin-top: 3px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 17px;
+  }
+
+  .parse-button {
+    display: none;
+    margin-top: 10px;
+  }
+
+  /* Ошибки */
+
+  .error {
+    display: none;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 7px;
+    background: var(--red-soft);
+    color: var(--red);
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  /* Результат генерации */
+
+  .result {
+    display: none;
+    margin-top: 16px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--background);
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  .result-title {
+    margin-bottom: 9px;
+    font-weight: 600;
+  }
+
+  .result-summary {
+    margin-bottom: 6px;
+  }
+
+  .result-summary:last-child {
+    margin-bottom: 0;
+  }
+
+  .result-actions {
+    display: none;
+    margin-top: 14px;
+  }
+
+  .result-warning-heading {
+    margin-top: 10px;
+    font-weight: 600;
+  }
+
+  .copy-result-button {
+    width: 100%;
+    min-height: 40px;
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--background);
+    color: var(--blue);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .copy-result-button:hover {
+    background: var(--background-soft);
+  }
+
+  .text-button {
+    width: 100%;
+    min-height: 38px;
+    margin-top: 6px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .text-button:hover {
+    background: var(--background-soft);
+  }
+
+  .json-section {
+    display: none;
+    margin-top: 12px;
+  }
+
+  #generatedJson {
+    display: block;
+    width: 100%;
+    min-height: 320px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    resize: vertical;
+    background: var(--background-soft);
+    color: var(--text-primary);
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .status {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 13px;
+    line-height: 18px;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .status.success {
+    display: block;
+    background: var(--green-soft);
+    color: #137333;
+  }
+
+  .status.warning {
+    display: block;
+    background: var(--yellow-soft);
+    color: var(--yellow);
+  }
+
+  .status.error {
+    display: block;
+    background: var(--red-soft);
+    color: var(--red);
+  }
+
+  .status-title {
+    margin-bottom: 3px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+</style>
+
+
+
+  </head>
+
+  <body>
+    <main class="sidebar">
+      <header class="sidebar-header">
+        <p class="description">
+          Загрузите Excel-таблицу опроса и заполните
+          необходимые поля в разделе «Настройки конфига»,
+          чтобы сгенерировать конфиг.
+        </p>
+      </header>
+
+      <details
+        id="configSettings"
+        class="settings-section"
+      >
+        <summary class="settings-summary">
+          <div class="settings-summary-content">
+            <div class="settings-title">
+              Настройки конфига
+            </div>
+          </div>
+
+          <span
+            class="settings-chevron"
+            aria-hidden="true"
+          >
+            ›
+          </span>
+        </summary>
+
+        <div class="settings-content">
+          <section class="slug-settings">
+            <div class="subsection-title">
+              Слаг опроса
+              <span class="required-marker">*</span>
+            </div>
+
+            <div class="field slug-field">
+              <input
+                id="surveySlug"
+                type="text"
+                placeholder="opros-pro-vrachey"
+                autocomplete="off"
+                aria-label="Слаг опроса"
+              >
+
+              <div
+                id="surveySlugError"
+                class="field-error"
+                role="alert"
+              ></div>
+            </div>
+          </section>
+
+          <section class="result-settings">
+            <div class="subsection-title">
+              Результат опроса
+            </div>
+
+            <div class="field">
+              <label for="resultHeading">
+                Заголовок
+              </label>
+
+              <input
+                id="resultHeading"
+                type="text"
+                placeholder="Спасибо за участие в опросе"
+                autocomplete="off"
+              >
+            </div>
+
+            <div class="field">
+              <label for="resultDescription">
+                Основной текст
+              </label>
+
+              <textarea
+                id="resultDescription"
+                rows="6"
+                placeholder="Результаты исследования скоро появятся на сайте..."
+              ></textarea>
+            </div>
+
+            <div class="articles-block">
+              <div class="subsection-header">
+                <div class="subsection-title">
+                  Статьи для списка
+                </div>
+
+                <div class="articles-counter">
+                  <button
+                    id="removeResultArticleButton"
+                    class="counter-button"
+                    type="button"
+                    aria-label="Удалить последнюю пустую статью"
+                    disabled
+                  >
+                    −
+                  </button>
+
+                  <span
+                    id="resultArticlesCount"
+                    class="counter-value"
+                    aria-live="polite"
+                  >
+                    0
+                  </span>
+
+                  <button
+                    id="addResultArticleButton"
+                    class="counter-button"
+                    type="button"
+                    aria-label="Добавить статью"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <div id="resultArticles"></div>
+            </div>
+          </section>
+        </div>
+      </details>
+
+      <section class="file-section">
+        <input
+          id="fileInput"
+          class="file-input"
+          type="file"
+          accept=".xlsx,.xls"
+        >
+
+        <button
+          id="selectFileButton"
+          class="primary-button"
+          type="button"
+        >
+          Загрузить Excel
+        </button>
+
+        <div
+          id="error"
+          class="error"
+          role="alert"
+        ></div>
+
+        <section
+          id="fileCard"
+          class="file-card"
+          aria-live="polite"
+        >
+          <div
+            class="file-card-icon"
+            aria-hidden="true"
+          >
+            ✓
+          </div>
+
+          <div class="file-card-content">
+            <div class="file-status">
+              Файл добавлен
+            </div>
+
+            <div
+              id="fileName"
+              class="file-name"
+            ></div>
+
+            <div
+              id="fileSize"
+              class="file-size"
+            ></div>
+          </div>
+        </section>
+
+        <button
+          id="parseButton"
+          class="primary-button parse-button"
+          type="button"
+        >
+          Сгенерировать опрос
+        </button>
+
+        <div
+          id="status"
+          class="status"
+          role="status"
+          aria-live="polite"
+        >
+          <div
+            id="statusTitle"
+            class="status-title"
+          ></div>
+
+          <div id="statusText"></div>
+        </div>
+      </section>
+
+      <section
+        id="result"
+        class="result"
+        aria-live="polite"
+      ></section>
+
+      <div
+        id="resultActions"
+        class="result-actions"
+      >
+        <button
+          id="copyResultButton"
+          class="secondary-button copy-result-button"
+          type="button"
+        >
+          Скопировать ещё раз
+        </button>
+
+        <button
+          id="toggleJsonButton"
+          class="text-button"
+          type="button"
+          aria-expanded="false"
+          aria-controls="jsonSection"
+        >
+          Показать JSON
+        </button>
+      </div>
+
+      <div
+        id="jsonSection"
+        class="json-section"
+      >
+        <textarea
+          id="generatedJson"
+          readonly
+          aria-label="Готовый JSON-конфиг"
+        ></textarea>
+      </div>
+    </main>
+
+    <script
+      src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"
+    ></script>
+
+    <script>
+  const elements = {
+    fileInput:
+      document.getElementById(
+        'fileInput'
+      ),
+
+    selectFileButton:
+      document.getElementById(
+        'selectFileButton'
+      ),
+
+    fileCard:
+      document.getElementById(
+        'fileCard'
+      ),
+
+    fileName:
+      document.getElementById(
+        'fileName'
+      ),
+
+    fileSize:
+      document.getElementById(
+        'fileSize'
+      ),
+
+    errorBox:
+      document.getElementById(
+        'error'
+      ),
+
+    parseButton:
+      document.getElementById(
+        'parseButton'
+      ),
+
+    resultBox:
+      document.getElementById(
+        'result'
+      ),
+
+    addResultArticleButton:
+      document.getElementById(
+        'addResultArticleButton'
+      ),
+
+    removeResultArticleButton:
+      document.getElementById(
+        'removeResultArticleButton'
+      ),
+
+    copyResultButton:
+      document.getElementById(
+        'copyResultButton'
+      ),
+
+    toggleJsonButton:
+      document.getElementById(
+        'toggleJsonButton'
+      ),
+
+    resultActions:
+      document.getElementById(
+        'resultActions'
+      ),
+
+    jsonSection:
+      document.getElementById(
+        'jsonSection'
+      ),
+
+    generatedJson:
+      document.getElementById(
+        'generatedJson'
+      ),
+
+    status:
+      document.getElementById(
+        'status'
+      ),
+
+    statusTitle:
+      document.getElementById(
+        'statusTitle'
+      ),
+
+    statusText:
+      document.getElementById(
+        'statusText'
+      )
+  };
+
+  let selectedFile = null;
+  let parseRequestId = 0;
+  let generationStartedAt = 0;
+  let loadingAnimationTimer = null;
+  let buttonResetTimer = null;
+  let generatedJson = '';
+
+  initialize();
+
+  function initialize() {
+    elements.selectFileButton.addEventListener(
+      'click',
+      openFilePicker
+    );
+
+    elements.fileInput.addEventListener(
+      'change',
+      handleFileSelection
+    );
+
+    elements.parseButton.addEventListener(
+      'click',
+      parseFile
+    );
+
+    elements.addResultArticleButton.addEventListener(
+      'click',
+      addResultArticle
+    );
+
+    elements.removeResultArticleButton
+      .addEventListener(
+        'click',
+        removeLastResultArticle
+      );
+
+    elements.copyResultButton.addEventListener(
+      'click',
+      copyGeneratedJson
+    );
+
+    elements.toggleJsonButton.addEventListener(
+      'click',
+      toggleGeneratedJson
+    );
+
+    const surveySlugInput =
+      document.getElementById(
+        'surveySlug'
+      );
+
+    surveySlugInput.addEventListener(
+      'input',
+      function () {
+        hideSurveySlugError();
+      }
+    );
+
+    updateResultArticleNumbers();
+  }
+
+  function addResultArticle() {
+    const container =
+      document.getElementById(
+        'resultArticles'
+      );
+
+    const article =
+      document.createElement(
+        'div'
+      );
+
+    article.className =
+      'result-article';
+
+    article.innerHTML = `
+      <div class="result-article-title">
+        Статья
+      </div>
+
+      <div class="field">
+        <label>
+          Название статьи
+        </label>
+
+        <input
+          class="result-article-name"
+          type="text"
+          placeholder="Как выбрать доктора по отзывам."
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="field">
+        <label>
+          Ссылка
+        </label>
+
+        <input
+          class="result-article-url"
+          type="url"
+          placeholder="https://example.com/article/"
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="result-article-actions">
+        <button
+          class="remove-article-button"
+          type="button"
+        >
+          Удалить
+        </button>
+      </div>
+    `;
+
+    article
+      .querySelector(
+        '.remove-article-button'
+      )
+      .addEventListener(
+        'click',
+        function () {
+          article.remove();
+
+          updateResultArticleNumbers();
+        }
+      );
+
+    container.appendChild(
+      article
+    );
+
+    updateResultArticleNumbers();
+  }
+
+  function updateResultArticleNumbers() {
+    const articles =
+      document.querySelectorAll(
+        '.result-article'
+      );
+
+    articles.forEach(
+      function (
+        article,
+        index
+      ) {
+        article
+          .querySelector(
+            '.result-article-title'
+          )
+          .textContent =
+            `Статья ${index + 1}`;
+      }
+    );
+
+    const counter =
+      document.getElementById(
+        'resultArticlesCount'
+      );
+
+    if (counter) {
+      counter.textContent =
+        String(
+          articles.length
+        );
+    }
+
+    elements.removeResultArticleButton.disabled =
+      articles.length === 0;
+  }
+
+  function removeLastResultArticle() {
+    const articles =
+      document.querySelectorAll(
+        '.result-article'
+      );
+
+    if (
+      articles.length === 0
+    ) {
+      return;
+    }
+
+    const lastArticle =
+      articles[
+        articles.length - 1
+      ];
+
+    const name =
+      lastArticle
+        .querySelector(
+          '.result-article-name'
+        )
+        .value
+        .trim();
+
+    const url =
+      lastArticle
+        .querySelector(
+          '.result-article-url'
+        )
+        .value
+        .trim();
+
+    /*
+     * Заполненную карточку через
+     * общий минус не удаляем.
+     */
+    if (name || url) {
+      return;
+    }
+
+    lastArticle.remove();
+
+    updateResultArticleNumbers();
+  }
+
+  function readResultArticles() {
+    const articleElements =
+      document.querySelectorAll(
+        '.result-article'
+      );
+
+    const articles = [];
+
+    for (
+      let index = 0;
+      index <
+        articleElements.length;
+      index += 1
+    ) {
+      const articleElement =
+        articleElements[
+          index
+        ];
+
+      const name =
+        articleElement
+          .querySelector(
+            '.result-article-name'
+          )
+          .value
+          .trim();
+
+      const url =
+        articleElement
+          .querySelector(
+            '.result-article-url'
+          )
+          .value
+          .trim();
+
+      if (!name && !url) {
+        continue;
+      }
+
+      if (!name) {
+        throw new Error(
+          `У статьи ${index + 1} ` +
+          'не заполнено название.'
+        );
+      }
+
+      if (!url) {
+        throw new Error(
+          `У статьи ${index + 1} ` +
+          'не заполнена ссылка.'
+        );
+      }
+
+      if (
+        !/^https?:\/\/\S+$/i
+          .test(url)
+      ) {
+        throw new Error(
+          `У статьи ${index + 1} ` +
+          'указана некорректная ссылка.'
+        );
+      }
+
+      articles.push({
+        name: name,
+        url: url
+      });
+    }
+
+    return articles;
+  }
+
+  function showSurveySlugError(
+    message
+  ) {
+    const settings =
+      document.getElementById(
+        'configSettings'
+      );
+
+    const input =
+      document.getElementById(
+        'surveySlug'
+      );
+
+    const error =
+      document.getElementById(
+        'surveySlugError'
+      );
+
+    settings.open = true;
+
+    error.textContent =
+      message;
+
+    error.style.display =
+      'block';
+
+    input.focus();
+
+    window.setTimeout(
+      function () {
+        input.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      },
+      50
+    );
+  }
+
+  function hideSurveySlugError() {
+    const error =
+      document.getElementById(
+        'surveySlugError'
+      );
+
+    error.textContent = '';
+    error.style.display =
+      'none';
+  }
+
+  function openFilePicker() {
+    elements.fileInput.click();
+  }
+
+  function handleFileSelection(
+    event
+  ) {
+    hideError();
+    clearResult();
+
+    parseRequestId += 1;
+
+    const file =
+      event.target.files[0];
+
+    if (!file) {
+      resetFile();
+      return;
+    }
+
+    const extension =
+      getFileExtension(
+        file.name
+      );
+
+    if (
+      ![
+        'xlsx',
+        'xls'
+      ].includes(
+        extension
+      )
+    ) {
+      resetFile();
+
+      showError(
+        'Выберите файл Excel ' +
+        'в формате .xlsx или .xls.'
+      );
+
+      return;
+    }
+
+    selectedFile = file;
+
+    elements.fileName.textContent =
+      file.name;
+
+    elements.fileSize.textContent =
+      formatFileSize(
+        file.size
+      );
+
+    elements.fileCard.style.display =
+      'flex';
+
+    elements.parseButton.style.display =
+      'block';
+
+    if (buttonResetTimer) {
+      window.clearTimeout(
+        buttonResetTimer
+      );
+
+      buttonResetTimer = null;
+    }
+
+    elements.selectFileButton.disabled =
+      false;
+
+    elements.selectFileButton.textContent =
+      'Загрузить Excel';
+
+    elements.selectFileButton.classList.remove(
+      'success'
+    );
+
+    elements.parseButton.textContent =
+      'Сгенерировать опрос';
+
+    elements.parseButton.classList.remove(
+      'success'
+    );
+  }
+
+  async function parseFile() {
+    hideError();
+    clearResult();
+
+    const resultHeading =
+      document
+        .getElementById(
+          'resultHeading'
+        )
+        .value
+        .trim();
+
+    const resultDescription =
+      document
+        .getElementById(
+          'resultDescription'
+        )
+        .value
+        .trim();
+
+    const surveySlug =
+      document
+        .getElementById(
+          'surveySlug'
+        )
+        .value
+        .trim();
+
+    if (!surveySlug) {
+      showSurveySlugError(
+        'Укажите слаг опроса.'
+      );
+
+      return;
+    }
+
+    if (
+      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/
+        .test(
+          surveySlug
+        )
+    ) {
+      showSurveySlugError(
+        'Используйте только ' +
+        'латинские буквы, цифры ' +
+        'и дефисы.'
+      );
+
+      return;
+    }
+
+    if (!selectedFile) {
+      showError(
+        'Сначала выберите файл Excel.'
+      );
+
+      return;
+    }
+
+    let resultArticles;
+
+    try {
+      resultArticles =
+        readResultArticles();
+    } catch (error) {
+      showError(
+        error.message
+      );
+
+      return;
+    }
+
+    const fileToParse =
+      selectedFile;
+
+    const currentRequestId =
+      ++parseRequestId;
+
+    generationStartedAt =
+      performance.now();
+
+    setLoadingState(true);
+
+    try {
+      if (
+        typeof XLSX ===
+        'undefined'
+      ) {
+        throw new Error(
+          'Не удалось загрузить библиотеку ' +
+          'для чтения Excel. ' +
+          'Обновите страницу и попробуйте ещё раз.'
+        );
+      }
+
+      const arrayBuffer =
+        await fileToParse
+          .arrayBuffer();
+
+      const workbook =
+        XLSX.read(
+          arrayBuffer,
+          {
+            type: 'array'
+          }
+        );
+
+      fillMergedCells(
+        workbook
+      );
+
+      const workbookData =
+        createWorkbookData(
+          workbook,
+          fileToParse.name
+        );
+
+      google.script.run
+        .withSuccessHandler(
+          function (model) {
+            if (
+              currentRequestId !==
+              parseRequestId
+            ) {
+              return;
+            }
+
+            showSurveyModelResult(
+              model
+            );
+          }
+        )
+        .withFailureHandler(
+          function (error) {
+            if (
+              currentRequestId !==
+              parseRequestId
+            ) {
+              return;
+            }
+
+            showImportError(
+              error
+            );
+          }
+        )
+        .processWorkbook(
+          workbookData,
+          surveySlug,
+          resultHeading,
+          resultDescription,
+          resultArticles
+        );
+    } catch (error) {
+      showImportError(
+        error
+      );
+    }
+  }
+
+  function createWorkbookData(
+    workbook,
+    fileName
+  ) {
+    const sheets =
+      workbook.SheetNames.map(
+        function (
+          sheetName,
+          sheetIndex
+        ) {
+          const worksheet =
+            workbook.Sheets[
+              sheetName
+            ];
+
+          const rows =
+            XLSX.utils
+              .sheet_to_json(
+                worksheet,
+                {
+                  header: 1,
+                  defval: '',
+                  raw: false,
+                  blankrows: true
+                }
+              );
+
+          const range =
+            getWorksheetRange(
+              worksheet
+            );
+
+          const sheetInfo =
+            workbook.Workbook
+              ?.Sheets?.[
+                sheetIndex
+              ];
+
+          return {
+            name: sheetName,
+
+            isHidden:
+              Boolean(
+                sheetInfo
+                  ?.Hidden
+              ),
+
+            rowCount:
+              range.rowCount,
+
+            columnCount:
+              range.columnCount,
+
+            rows: rows,
+
+            merges:
+              getWorksheetMerges(
+                worksheet
+              )
+          };
+        }
+      );
+
+    return {
+      fileName: fileName,
+      sheets: sheets
+    };
+  }
+
+  function getWorksheetRange(
+    worksheet
+  ) {
+    const reference =
+      worksheet['!ref'];
+
+    if (!reference) {
+      return {
+        rowCount: 0,
+        columnCount: 0
+      };
+    }
+
+    const range =
+      XLSX.utils
+        .decode_range(
+          reference
+        );
+
+    return {
+      rowCount:
+        range.e.r -
+        range.s.r +
+        1,
+
+      columnCount:
+        range.e.c -
+        range.s.c +
+        1
+    };
+  }
+
+  function getWorksheetMerges(
+    worksheet
+  ) {
+    const merges =
+      worksheet[
+        '!merges'
+      ] || [];
+
+    return merges.map(
+      function (merge) {
+        return {
+          startRow:
+            merge.s.r,
+
+          startColumn:
+            merge.s.c,
+
+          endRow:
+            merge.e.r,
+
+          endColumn:
+            merge.e.c
+        };
+      }
+    );
+  }
+
+  function showImportError(
+    error
+  ) {
+    setLoadingState(false);
+
+    elements.parseButton.textContent =
+      'Сгенерировать опрос';
+
+    elements.parseButton.classList.remove(
+      'success'
+    );
+
+    const message =
+      error &&
+      error.message
+        ? error.message
+        : (
+            'Неизвестная ошибка ' +
+            'при импорте Excel.'
+          );
+
+    showStatus(
+      'error',
+      '❌ Произошла ошибка',
+      message
+    );
+  }
+
+  function setLoadingState(
+    isLoading
+  ) {
+    elements.parseButton.disabled =
+      isLoading;
+
+    elements.selectFileButton.disabled =
+      isLoading;
+
+    if (isLoading) {
+      if (buttonResetTimer) {
+        window.clearTimeout(
+          buttonResetTimer
+        );
+
+        buttonResetTimer =
+          null;
+      }
+
+      elements.parseButton
+        .classList
+        .remove(
+          'success'
+        );
+
+      startLoadingAnimation();
+
+      return;
+    }
+
+    stopLoadingAnimation();
+
+    elements.parseButton.disabled =
+      false;
+
+    elements.selectFileButton.disabled =
+      false;
+  }
+
+  function startLoadingAnimation() {
+    stopLoadingAnimation();
+
+    let dotsCount = 1;
+
+    elements.parseButton.textContent =
+      'Генерация.';
+
+    loadingAnimationTimer =
+      window.setInterval(
+        function () {
+          dotsCount =
+            dotsCount % 3 + 1;
+
+          elements.parseButton.textContent =
+            'Генерация' +
+            '.'.repeat(
+              dotsCount
+            );
+        },
+        500
+      );
+  }
+
+  function stopLoadingAnimation() {
+    if (
+      !loadingAnimationTimer
+    ) {
+      return;
+    }
+
+    window.clearInterval(
+      loadingAnimationTimer
+    );
+
+    loadingAnimationTimer =
+      null;
+  }
+
+  function resetFile() {
+    selectedFile = null;
+
+    elements.fileInput.value =
+      '';
+
+    elements.fileCard.style.display =
+      'none';
+
+    elements.parseButton.style.display =
+      'none';
+
+    clearResult();
+  }
+
+  function clearResult() {
+    generatedJson = '';
+
+    elements.resultBox.innerHTML =
+      '';
+
+    elements.resultBox.style.display =
+      'none';
+
+    elements.resultActions.style.display =
+      'none';
+
+    elements.jsonSection.style.display =
+      'none';
+
+    elements.generatedJson.value =
+      '';
+
+    elements.toggleJsonButton.textContent =
+      'Показать JSON';
+
+    elements.copyResultButton.textContent =
+      'Скопировать ещё раз';
+
+    elements.toggleJsonButton.setAttribute(
+      'aria-expanded',
+      'false'
+    );
+
+    hideStatus();
+  }
+
+  function showError(
+    message
+  ) {
+    elements.errorBox.textContent =
+      message;
+
+    elements.errorBox.style.display =
+      'block';
+  }
+
+  function hideError() {
+    elements.errorBox.textContent =
+      '';
+
+    elements.errorBox.style.display =
+      'none';
+  }
+
+  function getFileExtension(
+    fileName
+  ) {
+    const parts =
+      fileName.split('.');
+
+    if (
+      parts.length < 2
+    ) {
+      return '';
+    }
+
+    return parts
+      .pop()
+      .toLowerCase();
+  }
+
+  function formatFileSize(
+    bytes
+  ) {
+    if (bytes < 1024) {
+      return `${bytes} Б`;
+    }
+
+    if (
+      bytes <
+      1024 * 1024
+    ) {
+      return (
+        bytes / 1024
+      ).toFixed(1) +
+        ' КБ';
+    }
+
+    return (
+      bytes /
+      1024 /
+      1024
+    ).toFixed(1) +
+      ' МБ';
+  }
+
+  function formatGenerationTime(
+    milliseconds
+  ) {
+    if (
+      !Number.isFinite(
+        milliseconds
+      ) ||
+      milliseconds < 0
+    ) {
+      return '—';
+    }
+
+    if (
+      milliseconds < 1000
+    ) {
+      return (
+        Math.round(
+          milliseconds
+        ) +
+        ' мс'
+      );
+    }
+
+    return (
+      milliseconds / 1000
+    ).toFixed(1) +
+      ' сек';
+  }
+
+  function escapeHtml(
+    value
+  ) {
+    return String(
+      value
+    )
+      .replaceAll(
+        '&',
+        '&amp;'
+      )
+      .replaceAll(
+        '<',
+        '&lt;'
+      )
+      .replaceAll(
+        '>',
+        '&gt;'
+      )
+      .replaceAll(
+        '"',
+        '&quot;'
+      )
+      .replaceAll(
+        "'",
+        '&#039;'
+      );
+  }
+
+  async function showSurveyModelResult(
+    model
+  ) {
+    setLoadingState(false);
+
+    const generationTime =
+      performance.now() -
+      generationStartedAt;
+
+    const errors =
+      Array.isArray(
+        model.errors
+      )
+        ? model.errors
+        : [];
+
+    const warnings =
+      Array.isArray(
+        model.warnings
+      )
+        ? model.warnings
+        : [];
+
+    const questionBlocks =
+      Array.isArray(
+        model.questionBlocks
+      )
+        ? model.questionBlocks
+        : [];
+
+    const metadata =
+      model.metadata || {};
+
+    const hasErrors =
+      errors.length > 0;
+
+    const hasWarnings =
+      warnings.length > 0;
+
+    generatedJson =
+      !hasErrors
+        ? String(
+            model.jsonText || ''
+          )
+        : '';
+
+    elements.generatedJson.value =
+      generatedJson;
+
+    if (
+      !hasErrors &&
+      generatedJson
+    ) {
+      console.log(
+        'Generated JSON:'
+      );
+
+      console.log(
+        generatedJson
+      );
+    }
+
+    const errorMessages =
+      errors
+        .map(
+          function (message) {
+            return `
+              <div class="result-summary">
+                ❌ ${escapeHtml(
+                  message
+                )}
+              </div>
+            `;
+          }
+        )
+        .join('');
+
+    const warningMessages =
+      warnings
+        .map(
+          function (message) {
+            return `
+              <div class="result-summary">
+                ${escapeHtml(
+                  message
+                )}
+              </div>
+            `;
+          }
+        )
+        .join('');
+
+    const errorHeadingHtml =
+      hasErrors
+        ? `
+            <div class="result-title">
+              ❌ Не удалось создать конфиг
+            </div>
+          `
+        : '';
+
+    const validationMessagesHtml =
+      hasErrors
+        ? errorMessages
+        : hasWarnings
+          ? `
+              <div
+                class="result-summary result-warning-heading"
+              >
+                Что нужно проверить:
+              </div>
+
+              ${warningMessages}
+            `
+          : `
+              <div class="result-summary">
+                Ошибок не найдено
+              </div>
+            `;
+
+    elements.resultBox.innerHTML = `
+      ${errorHeadingHtml}
+
+      <div class="result-summary">
+        Файл:
+        ${escapeHtml(
+          metadata.fileName || '—'
+        )}
+      </div>
+
+      <div class="result-summary">
+        Найдено вопросов:
+        ${questionBlocks.length}
+      </div>
+
+      <div class="result-summary">
+        Время генерации:
+        ${formatGenerationTime(
+          generationTime
+        )}
+      </div>
+
+      ${validationMessagesHtml}
+    `;
+
+    elements.resultBox.style.display =
+      'block';
+
+    if (
+      !hasErrors &&
+      generatedJson
+    ) {
+      elements.resultActions.style.display =
+        'block';
+
+      const copied =
+        await copyText(
+          generatedJson
+        );
+
+      if (hasWarnings) {
+        showStatus(
+          'warning',
+          '⚠️ Требуется проверка',
+          copied
+            ? (
+                'JSON скопирован, но конфиг ' +
+                'содержит предупреждения. ' +
+                'Проверьте его вручную перед ' +
+                'публикацией.'
+              )
+            : (
+                'Не удалось автоматически ' +
+                'скопировать JSON. Нажмите ' +
+                '«Скопировать ещё раз» и ' +
+                'проверьте конфиг перед публикацией.'
+              )
+        );
+      } else {
+        showStatus(
+          'success',
+          '✅ Готово',
+          copied
+            ? (
+                'JSON скопирован ' +
+                'в буфер обмена.'
+              )
+            : (
+                'Не удалось автоматически ' +
+                'скопировать JSON. Нажмите ' +
+                '«Скопировать ещё раз».'
+              )
+        );
+      }
+
+      resetSelectedFileAfterSuccess();
+
+    } else {
+      elements.resultActions.style.display =
+        'none';
+
+      if (hasErrors) {
+        showStatus(
+          'error',
+          '❌ Не удалось создать конфиг',
+          'Исправьте ошибки, указанные ' +
+          'в отчёте ниже.'
+        );
+      } else {
+        showStatus(
+          'error',
+          '❌ Не удалось создать конфиг',
+          'Генератор не вернул готовый JSON.'
+        );
+      }
+
+      elements.parseButton.textContent =
+        'Сгенерировать опрос';
+
+      elements.parseButton.classList.remove(
+        'success'
+      );
+    }
+
+    if (!hasErrors) {
+      const settings =
+        document.getElementById(
+          'configSettings'
+        );
+
+      settings.open = false;
+
+    }
+
+    window.setTimeout(
+      function () {
+        elements.resultBox.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      },
+      100
+    );
+
+    console.log(
+      'Questions',
+      model.questions
+    );
+
+    console.log(
+      'Warnings',
+      warnings
+    );
+  }
+
+  async function copyGeneratedJson() {
+    const copied =
+      await copyText(
+        generatedJson
+      );
+
+    elements.copyResultButton.textContent =
+      copied
+        ? 'Скопировано'
+        : 'Не удалось скопировать';
+
+    window.setTimeout(
+      function () {
+        elements.copyResultButton.textContent =
+          'Скопировать ещё раз';
+      },
+      1800
+    );
+  }
+
+  async function copyText(
+    text
+  ) {
+    if (!text) {
+      return false;
+    }
+
+    try {
+      await navigator.clipboard
+        .writeText(
+          text
+        );
+
+      return true;
+    } catch (error) {
+      return fallbackCopy(
+        text
+      );
+    }
+  }
+
+  function fallbackCopy(
+    text
+  ) {
+    const textarea =
+      document.createElement(
+        'textarea'
+      );
+
+    textarea.value =
+      text;
+
+    textarea.setAttribute(
+      'readonly',
+      ''
+    );
+
+    textarea.style.position =
+      'fixed';
+
+    textarea.style.left =
+      '-9999px';
+
+    textarea.style.top =
+      '0';
+
+    document.body.appendChild(
+      textarea
+    );
+
+    textarea.focus();
+    textarea.select();
+
+    let copied = false;
+
+    try {
+      copied =
+        document.execCommand(
+          'copy'
+        );
+    } catch (error) {
+      copied = false;
+    }
+
+    textarea.remove();
+
+    return copied;
+  }
+
+  function toggleGeneratedJson() {
+    const isVisible =
+      elements.jsonSection
+        .style
+        .display ===
+      'block';
+
+    const willBeVisible =
+      !isVisible;
+
+    elements.jsonSection.style.display =
+      willBeVisible
+        ? 'block'
+        : 'none';
+
+    elements.toggleJsonButton.textContent =
+      willBeVisible
+        ? 'Скрыть JSON'
+        : 'Показать JSON';
+
+    elements.toggleJsonButton.setAttribute(
+      'aria-expanded',
+      String(
+        willBeVisible
+      )
+    );
+  }
+
+  function showStatus(
+    type,
+    title,
+    text
+  ) {
+    elements.status.className =
+      'status ' + type;
+
+    elements.statusTitle.textContent =
+      title;
+
+    elements.statusText.textContent =
+      text;
+  }
+
+  function hideStatus() {
+    elements.status.className =
+      'status';
+
+    elements.statusTitle.textContent =
+      '';
+
+    elements.statusText.textContent =
+      '';
+  }
+
+  function resetSelectedFileAfterSuccess() {
+    selectedFile = null;
+
+    elements.fileInput.value =
+      '';
+
+    elements.fileName.textContent =
+      '';
+
+    elements.fileSize.textContent =
+      '';
+
+    elements.fileCard.style.display =
+      'none';
+
+    elements.parseButton.style.display =
+      'none';
+
+    elements.parseButton.textContent =
+      'Сгенерировать опрос';
+
+    elements.parseButton.classList.remove(
+      'success'
+    );
+
+    if (buttonResetTimer) {
+      window.clearTimeout(
+        buttonResetTimer
+      );
+
+      buttonResetTimer = null;
+    }
+
+    elements.selectFileButton.disabled =
+      true;
+
+    elements.selectFileButton.textContent =
+      'Конфиг сгенерирован';
+
+    elements.selectFileButton.classList.add(
+      'success'
+    );
+
+    buttonResetTimer =
+      window.setTimeout(
+        function () {
+          elements.selectFileButton.textContent =
+            'Загрузить Excel';
+
+          elements.selectFileButton.classList.remove(
+            'success'
+          );
+
+          elements.selectFileButton.disabled =
+            false;
+
+          buttonResetTimer = null;
+        },
+        1800
+      );
+  }
+
+  function fillMergedCells(
+    workbook
+  ) {
+    workbook.SheetNames.forEach(
+      function (sheetName) {
+        const sheet =
+          workbook.Sheets[
+            sheetName
+          ];
+
+        const merges =
+          sheet['!merges'] ||
+          [];
+
+        merges.forEach(
+          function (merge) {
+            const sourceAddress =
+              XLSX.utils
+                .encode_cell(
+                  merge.s
+                );
+
+            const sourceCell =
+              sheet[
+                sourceAddress
+              ];
+
+            if (!sourceCell) {
+              return;
+            }
+
+            for (
+              let row =
+                merge.s.r;
+              row <=
+                merge.e.r;
+              row += 1
+            ) {
+              for (
+                let column =
+                  merge.s.c;
+                column <=
+                  merge.e.c;
+                column += 1
+              ) {
+                const address =
+                  XLSX.utils
+                    .encode_cell({
+                      r: row,
+                      c: column
+                    });
+
+                if (
+                  !sheet[
+                    address
+                  ]
+                ) {
+                  sheet[
+                    address
+                  ] = {
+                    ...sourceCell
+                  };
+                }
+              }
+            }
+          }
+        );
+      }
+    );
+
+    return workbook;
+  }
+</script>
+  </body>
+</html>
