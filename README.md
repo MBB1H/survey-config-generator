@@ -9,6 +9,13 @@ The generator parses the survey structure, identifies question types, builds nav
 
 ![Survey Config Generator interface](assets/survey-config-generator.png)
 
+
+## Why I built it
+
+This tool was created to automate a repetitive survey-production workflow that previously required manually preparing JSON configurations from structured Excel questionnaires.
+
+The generator turns questionnaire data into a structured configuration, identifies question types and navigation logic, calculates progress, applies formatting rules, and validates the survey flow. This reduces repetitive manual work and helps prevent configuration errors before publication.
+
 ## Features
 
 The generator automatically:
